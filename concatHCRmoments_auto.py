@@ -114,8 +114,10 @@ time_all = np.zeros((totalTime,totalRng),dtype='datetime64[ns]')
 dbz_all = np.zeros((totalTime,totalRng))
 vel_all = np.zeros((totalTime,totalRng))
 width_all = np.zeros((totalTime,totalRng))
-snr_all = np.zeros((totalTime,totalRng))
-dbm_all = np.zeros((totalTime,totalRng))
+snrhx_all = np.zeros((totalTime,totalRng))
+snrvc_all = np.zeros((totalTime,totalRng))
+dbmhx_all = np.zeros((totalTime,totalRng))
+dbmvc_all = np.zeros((totalTime,totalRng))
 ncp_all = np.zeros((totalTime,totalRng))
 ldr_all = np.zeros((totalTime,totalRng))
 
@@ -169,8 +171,10 @@ for rFile in rFileIx:
     dbz_all[strtIx:endIx,:] = radData['DBZ'].data[:,rGateStrt:]
     vel_all[strtIx:endIx,:] = radData['VEL'].data[:,rGateStrt:]
     width_all[strtIx:endIx,:] = radData['WIDTH'].data[:,rGateStrt:]
-    snr_all[strtIx:endIx,:] = radData['SNR'].data[:,rGateStrt:]
-    dbm_all[strtIx:endIx,:] = radData['DBMHX'].data[:,rGateStrt:]
+    snrhx_all[strtIx:endIx,:] = radData['SNRHX'].data[:,rGateStrt:]
+    snrvc_all[strtIx:endIx,:] = radData['SNRVC'].data[:,rGateStrt:]
+    dbmhx_all[strtIx:endIx,:] = radData['DBMHX'].data[:,rGateStrt:]
+    dbmvc_all[strtIx:endIx,:] = radData['DBMVC'].data[:,rGateStrt:]
     ncp_all[strtIx:endIx,:] = radData['NCP'].data[:,rGateStrt:]
     ldr_all[strtIx:endIx,:] = radData['LDR'].data[:,rGateStrt:]
         
@@ -240,7 +244,7 @@ WIDTH.grid_mapping = 'grid_mapping'
 WIDTH.coordinates = 'time1d gateRng'
 
 LDR = rootGrp.createVariable('LDR','f4',('time1d','gateRng'),fill_value=np.nan)
-LDR.long_name = 'linear_depolarization_ratio'
+LDR.long_name = 'linear_depolarization_ratio (VV to VH)'
 LDR.units = 'dB'
 LDR.sampling_ratio = 1.000000
 LDR.grid_mapping = 'grid_mapping'
@@ -253,12 +257,33 @@ NCP.sampling_ratio = 1.000000
 NCP.grid_mapping = 'grid_mapping'
 NCP.coordinates = 'time1d gateRng'
 
-SNR = rootGrp.createVariable('SNR','f4',('time1d','gateRng'),fill_value=np.nan)
-SNR.long_name = 'signal_to_noise_ratio'
-SNR.units = 'dB'
-SNR.sampling_ratio = 1.000000
-SNR.grid_mapping = 'grid_mapping'
-SNR.coordinates = 'time1d gateRng'
+SNRVC = rootGrp.createVariable('SNRVC','f4',('time1d','gateRng'),fill_value=np.nan)
+SNRVC.long_name = 'signal_to_noise_ratio (VV)'
+SNRVC.units = 'dB'
+SNRVC.sampling_ratio = 1.000000
+SNRVC.grid_mapping = 'grid_mapping'
+SNRVC.coordinates = 'time1d gateRng'
+
+SNRHX = rootGrp.createVariable('SNRHX','f4',('time1d','gateRng'),fill_value=np.nan)
+SNRHX.long_name = 'signal_to_noise_ratio (VH)'
+SNRHX.units = 'dB'
+SNRHX.sampling_ratio = 1.000000
+SNRHX.grid_mapping = 'grid_mapping'
+SNRHX.coordinates = 'time1d gateRng'
+
+DBMVC = rootGrp.createVariable('DBMVC','f4',('time1d','gateRng'),fill_value=np.nan)
+DBMVC.long_name = 'log power (VV)'
+DBMVC.units = 'dBm'
+DBMVC.sampling_ratio = 1.000000
+DBMVC.grid_mapping = 'grid_mapping'
+DBMVC.coordinates = 'time1d gateRng'
+
+DBMHX = rootGrp.createVariable('DBMHX','f4',('time1d','gateRng'),fill_value=np.nan)
+DBMHX.long_name = 'log power (VH)'
+DBMHX.units = 'dBm'
+DBMHX.sampling_ratio = 1.000000
+DBMHX.grid_mapping = 'grid_mapping'
+DBMHX.coordinates = 'time1d gateRng'
 
 RELV = rootGrp.createVariable('elevation','f4',('time1d',),fill_value=np.nan)
 RELV.long_name = 'Radar beam elevation (positive is upwards [plane-relative])'
@@ -284,7 +309,10 @@ VEL[:] = vel_all
 WIDTH[:] = width_all
 LDR[:] = ldr_all
 NCP[:] = ncp_all
-SNR[:] = snr_all
+SNRVC[:] = snrvc_all
+SNRHX[:] = snrhx_all
+DBMVC[:] = dbmvc_all
+DBMHX[:] = dbmhx_all
 RELV[:] = radElev_all
 
 # Close the output file
