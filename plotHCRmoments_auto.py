@@ -10,10 +10,11 @@ import pyart
 import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 import xarray as xr
 import datetime
 import matplotlib.dates as mdates
-import warnings
 import os
 import sys
 import argparse
@@ -28,13 +29,15 @@ warnings.filterwarnings("ignore",category=RuntimeWarning)
 
 parser = argparse.ArgumentParser(epilog="example: python plotHCRmoments.py -f RF01_20180116 RF02_20180119 RF05_20180126",
                                 formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument("-f", "--flights", nargs='+', help="research flight(s) number(s) and date(s) in the form: RF##_YYYYMMDD")
+parser.add_argument("-f", "--flights", nargs='+', help="research flight(s) number(s) and date(s) in the form: RF##_YYYYMMDD", required=True)
 parser.add_argument("-d", "--duration", help="time duration of plots in minutes", default=15, type=int)
 parser.add_argument("-c", "--dataPath", help="path of concatenated data file location", default="/Volumes/SOCRATES_1/")
 parser.add_argument("-s", "--savePath", help="parent directory where plots are saved", default="/Users/danstechman/GoogleDrive/School/Research/SOCRATES/UI_OU_SOCRATES_Group/SOCRATES/Plots/")
 parser.add_argument("-e", "--fType", help="file type to save plots as", default="png")
 parser.add_argument("-t", "--titleAppnd", help="string to append to plot titles", default="")
 parser.add_argument("-a", "--saveAppnd", help="string to append to figure filename", default="")
+parser.add_argument("--strtTovrd", help="If anything other than empty string, will override stored start time for given flight", default="")
+parser.add_argument("--endTovrd", help="If anything other than empty string, will override stored end time for given flight", default="")
 
 args = parser.parse_args()
 
@@ -62,6 +65,10 @@ titleAppnd = args.titleAppnd
 saveAppnd = args.saveAppnd
 
 
+# Retrieve any overrides for start and end times
+strtTovrd = args.strtTovrd
+endTovrd = args.endTovrd
+
 
 for flight in flights:
     fStrtT = dt.now()
@@ -71,39 +78,85 @@ for flight in flights:
         # startT and endT should be strings of the format 'YYYYmmdd_HHMMSS'
         #    Be sure that the defined range is evenly divisible by your plot
         #    period (i.e., start and end at 00, 15, 30, or 45 min if plot period is every 15 min)
-        # startT = '20180115_230000'
-        # endT = '20180116_054500'
-        startT = '20180116_001500'
-        endT = '20180116_003000'
+        if not strtTovrd:
+            startT = '20180115_230000'
+        else:
+            startT = strtTovrd
+            
+        if not endTovrd:
+            endT = '20180116_054500'
+        else:
+            endT = endTovrd
     
     elif flight == 'RF02_20180119':
-        startT = '20180119_004500'
-        # endT = '20180119_064500'
-        endT = '20180119_010000'
+        if not strtTovrd:
+            startT = '20180119_004500'
+        else:
+            startT = strtTovrd
+            
+        if not endTovrd:    
+            endT = '20180119_064500'
+        else:
+            endT = endTovrd
     
     elif flight == 'RF03_20180123':
-        startT = '20180122_211500'
-        endT = '20180123_034500'
+        if not strtTovrd:
+            startT = '20180122_211500'
+        else:
+            startT = strtTovrd
+            
+        if not endTovrd:    
+            endT = '20180123_034500'
+        else:
+            endT = endTovrd
     
     elif flight == 'RF04_20180124':
-        startT = '20180123_233000'
-        # endT = '20180124_054500'
-        endT = '20180123_234500'
+        if not strtTovrd:
+            startT = '20180123_233000'
+        else:
+            startT = strtTovrd
+            
+        if not endTovrd:    
+            endT = '20180124_054500'
+        else:
+            endT = endTovrd
     
     elif flight == 'RF05_20180126':
-        startT = '20180125_230000'
-        endT = '20180126_051500'
+        if not strtTovrd:
+            startT = '20180125_230000'
+        else:
+            startT = strtTovrd
+            
+        if not endTovrd:    
+            endT = '20180126_051500'
+        else:
+            endT = endTovrd
     
     elif flight == 'RF06_20180129':
-        startT = '20180128_230000'
-        endT = '20180129_060000'
+        if not strtTovrd:
+            startT = '20180128_230000'
+        else:
+            startT = strtTovrd
+            
+        if not endTovrd:    
+            endT = '20180129_060000'
+        else:
+            endT = endTovrd
     
     elif flight == 'RF07_20180131':
-        startT = '20180131_010000'
-        endT = '20180131_073000'
+        if not strtTovrd:
+            startT = '20180131_010000'
+        else:
+            startT = strtTovrd
+            
+        if not endTovrd:    
+            endT = '20180131_073000'
+        else:
+            endT = endTovrd
     
     else:
-        sys.exit('flight not currently defined. Add flight case (startT and endT) to script and try again')
+        sys.exit('flight not currently defined. Add flight case (startT and endT) to script or'
+        ' define strtTovrd and/or endTovrd arguments and try again')
 
 
 
@@ -137,7 +190,8 @@ for flight in flights:
     width = hcrData['WIDTH'].data
     ldr = hcrData['LDR'].data
     ncp = hcrData['NCP'].data
-    snr = hcrData['SNR'].data
+    snrvc = hcrData['SNRVC'].data
+    dbmhx = hcrData['DBMHX'].data
 
     # Adjust radial velocities so negative values are always downward
     vel[radDwnwrd,:] *= -1
@@ -149,7 +203,7 @@ for flight in flights:
     dbz_masked_ncp = np.ma.masked_where((ncp < 0.2)|(gateAlt < 0)|np.isnan(dbz)|np.isinf(dbz),dbz)
     vel_masked_ncp = np.ma.masked_where((ncp < 0.2)|(gateAlt < 0)|np.isnan(dbz)|np.isinf(dbz),vel)
     width_masked_ncp = np.ma.masked_where((ncp < 0.2)|(gateAlt < 0)|np.isnan(dbz)|np.isinf(dbz),width)
-    ldr_masked_ncp = np.ma.masked_where((ncp < 0.2)|(gateAlt < 0)|np.isnan(dbz)|np.isinf(dbz),ldr)
+    ldr_masked_dbmhx = np.ma.masked_where((dbmhx < -104.9)|(gateAlt < 0)|np.isnan(dbz)|np.isinf(dbz),ldr)
 
 
     # **** Data Index ID ****
@@ -261,7 +315,7 @@ for flight in flights:
 
 
         # Plot LDR
-        im3 = ax3.pcolormesh(time2d[tmpStIx:tmpEndIx,:],gateAlt[tmpStIx:tmpEndIx,:]/1000,ldr_masked_ncp[tmpStIx:tmpEndIx,:],
+        im3 = ax3.pcolormesh(time2d[tmpStIx:tmpEndIx,:],gateAlt[tmpStIx:tmpEndIx,:]/1000,ldr_masked_dbmhx[tmpStIx:tmpEndIx,:],
                              vmin=-40,vmax=0,cmap=pyart.graph.cm.NWSRef)
         ax3.plot(time2d[tmpStIx:tmpEndIx,:],planeAlt[tmpStIx:tmpEndIx]/1000,
                  'k-',linewidth=6)

@@ -12,11 +12,12 @@ import pyart
 import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 import xarray as xr
 import datetime
 import matplotlib.dates as mdates
 import matplotlib.colors as colors
-import warnings
 import os
 import argparse
 
@@ -30,13 +31,16 @@ warnings.filterwarnings("ignore",category=RuntimeWarning)
 
 parser = argparse.ArgumentParser(epilog="example: python plotHSRL-HCR.py -f RF01_20180116 RF02_20180119 RF05_20180126",
                                 formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument("-f", "--flights", nargs='+', help="research flight(s) number(s) and date(s) in the form: RF##_YYYYMMDD")
+parser.add_argument("-f", "flights", nargs='+', help="research flight(s) number(s) and date(s) in the form: RF##_YYYYMMDD", required=True)
 parser.add_argument("-d", "--duration", help="time duration of plots in minutes", default=15, type=int)
 parser.add_argument("-c", "--dataPath", help="path of concatenated data file location", default="/Volumes/SOCRATES_1/")
 parser.add_argument("-s", "--savePath", help="parent directory where plots are saved", default="/Users/danstechman/GoogleDrive/School/Research/SOCRATES/UI_OU_SOCRATES_Group/SOCRATES/Plots/")
 parser.add_argument("-e", "--fType", help="file type to save plots as", default="png")
 parser.add_argument("-t", "--titleAppnd", help="string to append to plot titles", default="")
 parser.add_argument("-a", "--saveAppnd", help="string to append to figure filename", default="")
+parser.add_argument("--strtTovrd", help="If anything other than empty string, will override stored start time for given flight", default="")
+parser.add_argument("--endTovrd", help="If anything other than empty string, will override stored end time for given flight", default="")
+
 
 args = parser.parse_args()
 
@@ -64,44 +68,99 @@ titleAppnd = args.titleAppnd
 saveAppnd = args.saveAppnd
 
 
+# Retrieve any overrides for start and end times
+strtTovrd = args.strtTovrd
+endTovrd = args.endTovrd
+
 
 for flight in flights:
     fStrtT = dt.now()
     # Define flight-specific parameters, namely the period over which to produce plots
+    #    # RF01 case below is commented - please read for more information
     if flight == 'RF01_20180116':
         # startT and endT should be strings of the format 'YYYYmmdd_HHMMSS'
         #    Be sure that the defined range is evenly divisible by your plot
         #    period (i.e., start and end at 00, 15, 30, or 45 min if plot period is every 15 min)
-#         startT = '20180115_230000'
-#         endT = '20180116_053000'
-        startT = '20180116_020000'
-        endT = '20180116_021500'
+        if not strtTovrd:
+            startT = '20180115_230000'
+        else:
+            startT = strtTovrd
+            
+        if not endTovrd:
+            endT = '20180116_053000'
+        else:
+            endT = endTovrd
     
-    if flight == 'RF02_20180119':
-        startT = '20180119_013000'
-        endT = '20180119_064500'
-        
-    if flight == 'RF03_20180123':
-        startT = '20180122_220000'
-        endT = '20180123_033000'
+    elif flight == 'RF02_20180119':
+        if not strtTovrd:
+            startT = '20180119_013000'
+        else:
+            startT = strtTovrd
+            
+        if not endTovrd:    
+            endT = '20180119_064500'
+        else:
+            endT = endTovrd
     
-    if flight == 'RF04_20180124':
-#         startT = '20180124_000000'
-#         endT = '20180124_054500'
-        startT = '20180124_024500'
-        endT = '20180124_030000'
+    elif flight == 'RF03_20180123':
+        if not strtTovrd:
+            startT = '20180122_220000'
+        else:
+            startT = strtTovrd
+            
+        if not endTovrd:    
+            endT = '20180123_033000'
+        else:
+            endT = endTovrd
     
-    if flight == 'RF05_20180126':
-        startT = '20180125_230000'
-        endT = '20180126_051500'
+    elif flight == 'RF04_20180124':
+        if not strtTovrd:
+            startT = '20180123_233000'
+        else:
+            startT = strtTovrd
+            
+        if not endTovrd:    
+            endT = '20180124_054500'
+        else:
+            endT = endTovrd
     
-    if flight == 'RF06_20180129':
-        startT = '20180128_230000'
-        endT = '20180129_060000'
+    elif flight == 'RF05_20180126':
+        if not strtTovrd:
+            startT = '20180125_230000'
+        else:
+            startT = strtTovrd
+            
+        if not endTovrd:    
+            endT = '20180126_051500'
+        else:
+            endT = endTovrd
     
-    if flight == 'RF07_20180131':
-        startT = '20180131_010000'
-        endT = '20180131_080000'
+    elif flight == 'RF06_20180129':
+        if not strtTovrd:
+            startT = '20180128_230000'
+        else:
+            startT = strtTovrd
+            
+        if not endTovrd:    
+            endT = '20180129_060000'
+        else:
+            endT = endTovrd
+    
+    elif flight == 'RF07_20180131':
+        if not strtTovrd:
+            startT = '20180131_010000'
+        else:
+            startT = strtTovrd
+            
+        if not endTovrd:    
+            endT = '20180131_073000'
+        else:
+            endT = endTovrd
+    
+    else:
+        sys.exit('flight not currently defined. Add flight case (startT and endT) to script or'
+        ' define strtTovrd and/or endTovrd arguments and try again')
+
 
    
     # Create a timedelta corresponding to out plotting period
