@@ -3,7 +3,6 @@
 flight=RF08_20180204
 
 socratesDrive=/Volumes/SOCRATES_1/
-opsNAS=/Volumes/data/SOCRATES/
 
 mkdir -p ${socratesDrive}${flight}/FlightCamera
 mkdir -p ${socratesDrive}${flight}/GV-FlightLevel
