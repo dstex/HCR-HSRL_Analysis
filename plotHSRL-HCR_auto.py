@@ -207,7 +207,7 @@ for flight in flights:
     # **** Mask Variables ****
     # Mask variables to be plotted based on a number of (adjustable) criteria.
     print('{}    Masking radar moments...\n'.format(dt.strftime(dt.now(),'%m/%d/%Y %H:%M:%S')))
-    dbz_masked_ncp = np.ma.masked_where((hcr_ncp < 0.2)|(hcr_gateAlt < 0)|np.isnan(hcr_dbz)|np.isinf(hcr_dbz),hcr_dbz)
+    dbz_masked_ncp = np.ma.masked_where((hcr_ncp < 0.2)|(hcr_gateAlt < 0)|np.isinf(hcr_dbz)|np.isnan(hcr_dbz),hcr_dbz)
 
 
     # **** Data Index ID ****

@@ -200,10 +200,10 @@ for flight in flights:
     # **** Mask Variables ****
     # Mask variables to be plotted based on a number of (adjustable) criteria.
     print('{}    Masking radar moments...\n'.format(dt.strftime(dt.now(),'%m/%d/%Y %H:%M:%S')))
-    dbz_masked_ncp = np.ma.masked_where((ncp < 0.2)|(gateAlt < 0)|np.isnan(dbz)|np.isinf(dbz),dbz)
-    vel_masked_ncp = np.ma.masked_where((ncp < 0.2)|(gateAlt < 0)|np.isnan(dbz)|np.isinf(dbz),vel)
-    width_masked_ncp = np.ma.masked_where((ncp < 0.2)|(gateAlt < 0)|np.isnan(dbz)|np.isinf(dbz),width)
-    ldr_masked_dbmhx = np.ma.masked_where((dbmhx < -104.9)|(gateAlt < 0)|np.isnan(dbz)|np.isinf(dbz),ldr)
+    dbz_masked_ncp = np.ma.masked_where((ncp < 0.2)|(gateAlt < 0)|np.isinf(dbz)|np.isnan(dbz),dbz)
+    vel_masked_ncp = np.ma.masked_where((ncp < 0.2)|(gateAlt < 0)|np.isinf(vel)|np.isnan(vel),vel)
+    width_masked_ncp = np.ma.masked_where((ncp < 0.2)|(gateAlt < 0)|np.isinf(width)|np.isnan(width),width)
+    ldr_masked_dbmhx = np.ma.masked_where((dbmhx < -104.9)|(gateAlt < 0)|np.isinf(ldr)|np.isnan(ldr),ldr)
 
 
     # **** Data Index ID ****
