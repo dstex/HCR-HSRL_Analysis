@@ -154,6 +154,17 @@ for flight in flights:
         else:
             endT = endTovrd
     
+    elif flight == 'RF08_20180204':
+        if not strtTovrd:
+            startT = '20180203_233000'
+        else:
+            startT = strtTovrd
+            
+        if not endTovrd:    
+            endT = '20180204_063000'
+        else:
+            endT = endTovrd
+    
     else:
         sys.exit('flight not currently defined. Add flight case (startT and endT) to script or'
         ' define strtTovrd and/or endTovrd arguments and try again')
@@ -203,7 +214,7 @@ for flight in flights:
     dbz_masked_ncp = np.ma.masked_where((ncp < 0.2)|(gateAlt < 0)|np.isinf(dbz)|np.isnan(dbz),dbz)
     vel_masked_ncp = np.ma.masked_where((ncp < 0.2)|(gateAlt < 0)|np.isinf(vel)|np.isnan(vel),vel)
     width_masked_ncp = np.ma.masked_where((ncp < 0.2)|(gateAlt < 0)|np.isinf(width)|np.isnan(width),width)
-    ldr_masked_dbmhx = np.ma.masked_where((dbmhx < -104.9)|(gateAlt < 0)|np.isinf(ldr)|np.isnan(ldr),ldr)
+    ldr_masked_dbmhx = np.ma.masked_where((dbmhx < -101.0)|(gateAlt < 0)|np.isinf(ldr)|np.isnan(ldr),ldr)
 
 
     # **** Data Index ID ****

@@ -31,7 +31,7 @@ warnings.filterwarnings("ignore",category=RuntimeWarning)
 
 parser = argparse.ArgumentParser(epilog="example: python plotHSRL-HCR.py -f RF01_20180116 RF02_20180119 RF05_20180126",
                                 formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument("-f", "flights", nargs='+', help="research flight(s) number(s) and date(s) in the form: RF##_YYYYMMDD", required=True)
+parser.add_argument("-f", "--flights", nargs='+', help="research flight(s) number(s) and date(s) in the form: RF##_YYYYMMDD", required=True)
 parser.add_argument("-d", "--duration", help="time duration of plots in minutes", default=15, type=int)
 parser.add_argument("-c", "--dataPath", help="path of concatenated data file location", default="/Volumes/SOCRATES_1/")
 parser.add_argument("-s", "--savePath", help="parent directory where plots are saved", default="/Users/danstechman/GoogleDrive/School/Research/SOCRATES/UI_OU_SOCRATES_Group/SOCRATES/Plots/")
@@ -154,6 +154,17 @@ for flight in flights:
             
         if not endTovrd:    
             endT = '20180131_073000'
+        else:
+            endT = endTovrd
+            
+    elif flight == 'RF08_20180204':
+        if not strtTovrd:
+            startT = '20180203_233000'
+        else:
+            startT = strtTovrd
+            
+        if not endTovrd:    
+            endT = '20180204_063000'
         else:
             endT = endTovrd
     
