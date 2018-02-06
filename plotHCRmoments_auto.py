@@ -164,6 +164,17 @@ for flight in flights:
             endT = '20180204_063000'
         else:
             endT = endTovrd
+            
+    elif flight == 'RF09_20180205':
+        if not strtTovrd:
+            startT = '20180204_230000'
+        else:
+            startT = strtTovrd
+            
+        if not endTovrd:    
+            endT = '20180205_064500'
+        else:
+            endT = endTovrd
     
     else:
         sys.exit('flight not currently defined. Add flight case (startT and endT) to script or'
@@ -303,7 +314,7 @@ for flight in flights:
         ax1.plot(time2d[tmpStIx:tmpEndIx,:],planeAlt[tmpStIx:tmpEndIx]/1000,
                  'k-',linewidth=6)
         ax1.set_ylim([0,7])
-        cax1 = fig.colorbar(im1,ax=ax1,fraction=0.08,shrink=caxShrnk,pad=0.008)
+        cax1 = fig.colorbar(im1,ax=ax1,fraction=0.05,shrink=caxShrnk,pad=0.008)
         cax1.set_label('Reflectivity (dBZ)',fontsize=caxFsz)
         cax1.ax.set_yticklabels(cax1.ax.get_yticklabels(), fontsize=ctkFsz)
         ax1.tick_params(axis='both', which='major', labelsize=tkFsz)
@@ -317,7 +328,7 @@ for flight in flights:
         ax2.plot(time2d[tmpStIx:tmpEndIx,:],planeAlt[tmpStIx:tmpEndIx]/1000,
                  'k-',linewidth=6)
         ax2.set_ylim([0,7])
-        cax2 = fig.colorbar(im2,ax=ax2,fraction=0.08,shrink=caxShrnk,pad=0.008)
+        cax2 = fig.colorbar(im2,ax=ax2,fraction=0.05,shrink=caxShrnk,pad=0.008)
         cax2.set_label('Radial Velocity (m/s)',fontsize=caxFsz)
         cax2.ax.set_yticklabels(cax2.ax.get_yticklabels(), fontsize=ctkFsz)
         ax2.tick_params(axis='both', which='major', labelsize=tkFsz)
@@ -331,7 +342,7 @@ for flight in flights:
         ax3.plot(time2d[tmpStIx:tmpEndIx,:],planeAlt[tmpStIx:tmpEndIx]/1000,
                  'k-',linewidth=6)
         ax3.set_ylim([0,7])
-        cax3 = fig.colorbar(im3,ax=ax3,fraction=0.08,shrink=caxShrnk,pad=0.008)
+        cax3 = fig.colorbar(im3,ax=ax3,fraction=0.05,shrink=caxShrnk,pad=0.008)
         cax3.ax.set_yticklabels(cax3.ax.get_yticklabels(), fontsize=ctkFsz)
         cax3.set_label('LDR (dB)',fontsize=caxFsz)
         ax3.tick_params(axis='both', which='major', labelsize=tkFsz)
@@ -343,7 +354,7 @@ for flight in flights:
                              vmin=0,vmax=3,cmap=pyart.graph.cm.RefDiff)
         ax4.plot(time2d[tmpStIx:tmpEndIx,:],planeAlt[tmpStIx:tmpEndIx]/1000,
                  'k-',linewidth=6)
-        cax4 = fig.colorbar(im4,ax=ax4,fraction=0.08,shrink=caxShrnk,pad=0.008)
+        cax4 = fig.colorbar(im4,ax=ax4,fraction=0.05,shrink=caxShrnk,pad=0.008)
         cax4.set_label('Spectral Width (m/s)',fontsize=caxFsz,)
         cax4.ax.set_yticklabels(cax4.ax.get_yticklabels(), fontsize=ctkFsz)
         ax4.set_xlabel('Time (UTC)',fontsize=axFsz)
@@ -361,6 +372,7 @@ for flight in flights:
         # Save the output figure
         saveStr = '{}HCR-moments_{}{}.{}'.format(figSavePath,saveDTstr,saveAppnd,fType)
         fig.savefig(saveStr,bbox_inches='tight')
+        
 
         # Set the start and end times for the next plot
         tmpStrtDT = tmpEndDT

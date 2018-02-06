@@ -115,7 +115,7 @@ for flight in flights:
     
     elif flight == 'RF04_20180124':
         if not strtTovrd:
-            startT = '20180123_233000'
+            startT = '20180124_000000'
         else:
             startT = strtTovrd
             
@@ -165,6 +165,17 @@ for flight in flights:
             
         if not endTovrd:    
             endT = '20180204_063000'
+        else:
+            endT = endTovrd
+            
+    elif flight == 'RF09_20180205':
+        if not strtTovrd:
+            startT = '20180204_230000'
+        else:
+            startT = strtTovrd
+            
+        if not endTovrd:    
+            endT = '20180205_064500'
         else:
             endT = endTovrd
     
@@ -400,6 +411,7 @@ for flight in flights:
         # Save the output figure
         saveStr = '{}HSRL-HCR_{}{}.{}'.format(figSavePath,saveDTstr,saveAppnd,fType)
         fig.savefig(saveStr,bbox_inches='tight')
+        
 
         # Set the start and end times for the next plot
         tmpStrtDT = tmpEndDT
