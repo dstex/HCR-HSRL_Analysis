@@ -206,13 +206,14 @@ for flight in flights:
 
     # Determine the time indices where the HCR is pointing downward
     radDwnwrd = np.where(elev < 0.0)
+    radUpwrd = np.where(elev > 0.0)
 
     dbz = hcrData['DBZ'].data
     vel = hcrData['VEL'].data
     width = hcrData['WIDTH'].data
     ldr = hcrData['LDR'].data
     ncp = hcrData['NCP'].data
-    snrvc = hcrData['SNRVC'].data
+    snrhx = hcrData['SNRHX'].data
     dbmhx = hcrData['DBMHX'].data
 
     # Adjust radial velocities so negative values are always downward
@@ -225,7 +226,9 @@ for flight in flights:
     dbz_masked_ncp = np.ma.masked_where((ncp < 0.2)|(gateAlt < 0)|np.isinf(dbz)|np.isnan(dbz),dbz)
     vel_masked_ncp = np.ma.masked_where((ncp < 0.2)|(gateAlt < 0)|np.isinf(vel)|np.isnan(vel),vel)
     width_masked_ncp = np.ma.masked_where((ncp < 0.2)|(gateAlt < 0)|np.isinf(width)|np.isnan(width),width)
-    ldr_masked_dbmhx = np.ma.masked_where((dbmhx < -101.0)|(gateAlt < 0)|np.isinf(ldr)|np.isnan(ldr),ldr)
+    ldr_masked_dbmhx = np.ma.masked_where((gateAlt < 0)|np.isinf(ldr)|np.isnan(ldr),ldr)
+    ldr_masked_dbmhx[radDwnwrd,:] = np.ma.masked_where((dbmhx[radDwnwrd,:] < -101.0),ldr_masked_dbmhx[radDwnwrd,:])
+    ldr_masked_dbmhx[radUpwrd,:] = np.ma.masked_where((dbmhx[radUpwrd,:] < -101.5),ldr_masked_dbmhx[radUpwrd,:])
 
 
     # **** Data Index ID ****
