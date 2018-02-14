@@ -198,8 +198,8 @@ time1d = rootGrp.createDimension('time1d',totalTime)
 # Create out output variable instances within the file and
 #    define metadata for each as needed
 TIME = rootGrp.createVariable('time1d','f8',('time1d',))
-TIME.long_name = 'POSIX Timestamp'
-TIME.units = 'Seconds since 1 Jan 1970'
+TIME.long_name = 'Timestamp'
+TIME.units = 'UTC YYYYMMDDTHHMMSS.f'
 TIME.coordinates = 'time1d'
 
 GRNG = rootGrp.createVariable('gateRng','f4',('gateRng',),fill_value=np.nan)
@@ -208,8 +208,8 @@ GRNG.units = 'm'
 GRNG.coordinates = 'gateRng'
 
 TIME2D = rootGrp.createVariable('time2d','f8',('time1d','gateRng'))
-TIME2D.long_name = 'POSIX Timestamp for every gate/time'
-TIME2D.units = 'Seconds since 1 Jan 1970'
+TIME2D.long_name = 'Timestamp for every gate/time'
+TIME2D.units = 'UTC YYYYMMDDTHHMMSS.f'
 TIME2D.coordinates = 'time1d gateRng'
 
 GALT2D = rootGrp.createVariable('gateAlt2d','f4',('time1d','gateRng'),fill_value=np.nan)
