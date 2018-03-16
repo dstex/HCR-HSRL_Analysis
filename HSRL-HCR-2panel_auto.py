@@ -224,6 +224,7 @@ for flight in flights:
     hsrl_aerosolBackCoef = np.ma.masked_array(hsrlData['Aerosol_Backscatter_Coefficient'].data, mask=hsrlData['Aerosol_Backscatter_Coefficient_mask'].data)
     hsrl_aerosolExtnctCoef = np.ma.masked_array(hsrlData['Aerosol_Extinction_Coefficient'].data, mask=hsrlData['Aerosol_Extinction_Coefficient_mask'].data)
     hsrl_partDepol = np.ma.masked_array(hsrlData['Particle_Depolarization'].data, mask=hsrlData['Particle_Depolarization_mask'].data)
+    hsrl_volDepol = np.ma.masked_array(hsrlData['Volume_Depolarization'].data, mask=hsrlData['Volume_Depolarization_mask'].data)
 
 
     # **** Mask Variables ****
@@ -332,23 +333,39 @@ for flight in flights:
         # Initialize figure with 4 subplots, sharing x and y axes
         # Figure size should *roughly* yield a 1:1 ratio for the plot dimensions, but this is
         #    entirely dependent on aircraft speed at any given time
-        fig, (ax1, ax2) = plt.subplots(2, sharex=True, sharey=True,figsize=(16*(dur/5.),14))
+        fig, (ax1, ax2) = plt.subplots(2, sharex=True, sharey=True,figsize=(50,14))
         axFsz = 32
         caxFsz = 28
         ttlFsz = 36
         tkFsz = 24
-        ctkFsz = 20
-        caxShrnk = 0.9
+        ctkFsz = 22
+        caxShrnk = 0.85
 
         
         # Plot reflectivity and create our figure title
-        im1 = ax1.pcolormesh(hcr_time2d[hcr_tmpStIx:hcr_tmpEndIx,:],hcr_gateAlt[hcr_tmpStIx:hcr_tmpEndIx,:]/1000,dbz_masked_ncp[hcr_tmpStIx:hcr_tmpEndIx,:],
-                             vmin=-40,vmax=16,cmap=pyart.graph.cm.LangRainbow12)
+        # im1 = ax1.pcolormesh(hcr_time2d[hcr_tmpStIx:hcr_tmpEndIx,:],hcr_gateAlt[hcr_tmpStIx:hcr_tmpEndIx,:]/1000,dbz_masked_ncp[hcr_tmpStIx:hcr_tmpEndIx,:],
+#                              vmin=-40,vmax=16,cmap=pyart.graph.cm.LangRainbow12)
+#         ax1.plot(hsrl_time1d[hsrl_tmpStIx:hsrl_tmpEndIx],planeAlt[hsrl_tmpStIx:hsrl_tmpEndIx]/1000,
+#                  'k-',linewidth=6)
+#         ax1.set_ylim([0,7])
+#         cax1 = fig.colorbar(im1,ax=ax1,fraction=0.05,shrink=caxShrnk,pad=0.008)
+#         cax1.set_label('Reflectivity (dBZ)',fontsize=caxFsz)
+#         cax1.ax.set_yticklabels(cax1.ax.get_yticklabels(), fontsize=ctkFsz)
+#         ax1.tick_params(axis='both', which='major', labelsize=tkFsz)
+#         ax1.set_title('SOCRATES - {} UTC{}'.format(titleDTstr,titleAppnd),fontsize=ttlFsz) 
+#         ax1.set_ylabel('Altitude (km)',fontsize=axFsz)
+#         ttl = ax1.title
+#         ttl.set_position([.5, 1.05])
+#         ax1.grid()
+        
+        im1 = ax1.pcolormesh(hsrl_time2d[hsrl_tmpStIx:hsrl_tmpEndIx,:],hsrl_gateAlt[hsrl_tmpStIx:hsrl_tmpEndIx,:]/1000,
+                             hsrl_partDepol[hsrl_tmpStIx:hsrl_tmpEndIx,:],
+                             vmin=0,vmax=1,
+                             cmap=pyart.graph.cm.LangRainbow12)
         ax1.plot(hsrl_time1d[hsrl_tmpStIx:hsrl_tmpEndIx],planeAlt[hsrl_tmpStIx:hsrl_tmpEndIx]/1000,
                  'k-',linewidth=6)
-        ax1.set_ylim([0,7])
         cax1 = fig.colorbar(im1,ax=ax1,fraction=0.05,shrink=caxShrnk,pad=0.008)
-        cax1.set_label('Reflectivity (dBZ)',fontsize=caxFsz)
+        cax1.set_label('Particle Depolarization',fontsize=caxFsz)
         cax1.ax.set_yticklabels(cax1.ax.get_yticklabels(), fontsize=ctkFsz)
         ax1.tick_params(axis='both', which='major', labelsize=tkFsz)
         ax1.set_title('SOCRATES - {} UTC{}'.format(titleDTstr,titleAppnd),fontsize=ttlFsz) 
@@ -367,12 +384,12 @@ for flight in flights:
                  'k-',linewidth=6)
         ax2.set_ylim([0,7])
         cax2 = fig.colorbar(im2,ax=ax2,fraction=0.05,shrink=caxShrnk,pad=0.008)
-        cax2.set_label('Aerosol Backscatter Coefficient\n($m^{-1}sr^{-1}$)',fontsize=caxFsz*0.7)
+        cax2.set_label('Aerosol Backscatter Coefficient\n($m^{-1}sr^{-1}$)',fontsize=caxFsz*0.9)
         cax2.ax.set_yticklabels(cax2.ax.get_yticklabels(), fontsize=ctkFsz)
         ax2.tick_params(axis='both', which='major', labelsize=tkFsz)
         ax2.set_ylabel('Altitude (km)',fontsize=axFsz)
         ax2.set_xlabel('Time (UTC)',fontsize=axFsz)
-        ax2.xaxis.set_major_locator(mdates.MinuteLocator())
+        ax2.xaxis.set_major_locator(mdates.MinuteLocator(byminute=[0,10,20,30,40,50]))
         ax2.xaxis.set_major_formatter(xtick_formatter)
         ax2.grid()
 

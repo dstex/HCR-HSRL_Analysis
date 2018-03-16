@@ -175,7 +175,73 @@ for flight in flights:
             endT = '20180205_064500'
         else:
             endT = endTovrd
+            
+    elif flight == 'RF10_20180208':
+        if not strtTovrd:
+            startT = '20180207_210000'
+        else:
+            startT = strtTovrd
+            
+        if not endTovrd:    
+            endT = '20180208_051500'
+        else:
+            endT = endTovrd
+            
+    elif flight == 'RF11_20180217':
+        if not strtTovrd:
+            startT = '20180217_013000'
+        else:
+            startT = strtTovrd
+            
+        if not endTovrd:    
+            endT = '20180217_063000'
+        else:
+            endT = endTovrd
+            
+    elif flight == 'RF12_20180218':
+        if not strtTovrd:
+            startT = '20180218_000000'
+        else:
+            startT = strtTovrd
+            
+        if not endTovrd:    
+            endT = '20180218_080000'
+        else:
+            endT = endTovrd
     
+    elif flight == 'RF13_20180220':
+        if not strtTovrd:
+            startT = '20180219_230000'
+        else:
+            startT = strtTovrd
+            
+        if not endTovrd:    
+            endT = '20180220_063000'
+        else:
+            endT = endTovrd
+            
+    elif flight == 'RF14_20180222':
+        if not strtTovrd:
+            startT = '20180221_230000'
+        else:
+            startT = strtTovrd
+            
+        if not endTovrd:    
+            endT = '20180222_064500'
+        else:
+            endT = endTovrd
+            
+    elif flight == 'RF15_20180224':
+        if not strtTovrd:
+            startT = '20180224_020000'
+        else:
+            startT = strtTovrd
+            
+        if not endTovrd:    
+            endT = '20180224_083000'
+        else:
+            endT = endTovrd
+            
     else:
         sys.exit('flight not currently defined. Add flight case (startT and endT) to script or'
         ' define strtTovrd and/or endTovrd arguments and try again')
